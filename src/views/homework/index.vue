@@ -1,16 +1,16 @@
 <template>
   <el-collapse v-model="activeNames" @change="handleChange">
-    <div class="titleicon">前端开发组</div>
+    <div class="titleicon">{{ group }}</div>
 
     <el-collapse-item v-for="item in HomeworkList" :key="item.id" :name="item.id" class="marginL">
       <template slot="title">
         <h3>{{ item.name }}</h3>
         <p class="deadline marginL">DeadLine：{{ item.deadline }}</p>
-        <p v-if="item.finish==1" class="marginL">finished</p>
-        <p v-if="item.finish==0" class="marginL">unfinish</p>
+        <!-- <p v-if="item.finish==1" class="marginL">finished</p>
+        <p v-if="item.finish==0" class="marginL">unfinish</p> -->
       </template>
       <div class="marginL">
-        <p>From lesson：{{ item.lesson }}</p>
+        <p>From lesson：{{ item.lessonName }}</p>
         <p>{{ item.desc }}</p>
       </div>
       <div class="submitbox">
@@ -31,35 +31,29 @@
 export default {
   data() {
     return {
+      group: '',
       activeNames: ['1'],
-      HomeworkList: [
-        {
-          id: '1',
-          name: 'HTML基础',
-          desc: '在界面中一致,所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。',
-          deadline: '2020.09.31 12：00',
-          lesson: '前端第一次授课',
-          finish: '0'
-        }, {
-          id: '2',
-          name: 'CSS应用',
-          desc: '在界面中一致,所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。',
-          deadline: '2020.09.31 12：00',
-          lesson: '前端第一次授课',
-          finish: '0'
-        }, {
-          id: '3',
-          name: 'Javascript基础语法 ',
-          desc: '在界面中一致,所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。',
-          deadline: '2020.09.31 12：00',
-          lesson: '前端第一次授课',
-          finish: '1'
-        }
-      ],
+      HomeworkList: [],
       submitext: ''
     }
   },
+  created: function() {
+    this.group = this.$store.getters.groupname
+    // this.getListbyGroupID(this.$store.getters.groupid)
+
+    this.getListbyGroupID(1)
+  },
   methods: {
+    getListbyGroupID(val) {
+      if (val) {
+        this.$store.dispatch('homework/getlist').then((response) => {
+          if (response) {
+            console.log(response)
+            this.HomeworkList = response
+          }
+        })
+      }
+    },
     handleChange(val) {
       console.log(val)
     }

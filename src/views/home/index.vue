@@ -73,12 +73,11 @@ export default {
     }
   }
   .el-col {
-    border-radius: 8px;
     height: 37vh;
   }
 
   .bg-purple {
-    background: #d3dce6;
+    background: rgb(0,0,0,0.2);
   }
 
   .grid-content {

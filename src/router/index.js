@@ -75,30 +75,6 @@ export const constantRoutes = [
     ]
   },
 
-  // {
-  //   path: '/homework',
-  //   component: Layout,
-  //   meta: { title: 'My Homework', icon: 'el-icon-s-help' },
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Homework',
-  //       component: () => import('@/views/homework/index'),
-  //       meta: { title: 'Homework List', icon: 'form' }
-  //     },
-  //     // {
-  //     //   path: 'publish',
-  //     //   name: 'Publish',
-  //     //   component: () => import('@/views/homework/publish'),
-  //     //   meta: { title: 'Publish', icon: 'form' }
-  //     // },
-  //     {
-  //       path: 'submit',
-  //       name: 'Submit',
-  //       component: () => import('@/views/homework/submit')
-  //     }
-  //   ]
-  // },
   {
     path: '/percenter',
     component: Layout,

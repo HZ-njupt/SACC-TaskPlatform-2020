@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import axios from 'axios'
+// import axios from 'axios'
 // export function login(data) {
 //   console.log(data)
 //   return request({
