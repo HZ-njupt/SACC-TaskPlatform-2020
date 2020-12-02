@@ -1,12 +1,17 @@
-import { getbyGroupId } from '@/api/homework'
+import { getbyGroupId, getbyLessonId, PublishWork, UpdateWork } from '@/api/homework'
 const state = {
-  WorkList: [],
+  GroupWorkList: [],
+  LessonWorkList: [],
+  CurrentWork: {},
   lessonName: ''
 }
 
 const mutations = {
-  SET_List: (state, data) => {
-    state.WorkList = data
+  SET_GroupList: (state, data) => {
+    state.GroupWorkList = data
+  },
+  SET_LessonList: (state, data) => {
+    state.LessonWorkList = data
   },
   CHANGE_NAME: (state, lessonid) => {
     // 把ID号转为对应课名
@@ -16,9 +21,30 @@ const mutations = {
 
 const actions = {
   // 通过GroupID获取作业列表
-  getlist({ commit, state }, groupid) {
+  GetListbyGroup({ commit, state }, groupid) {
     return new Promise((resolve, reject) => {
-      getbyGroupId({ group: groupid }
+      getbyGroupId(groupid
+      ).then(response => {
+        console.log(response)
+        if (response.code === 200) {
+          const { data } = response
+          data.map(value => {
+            commit('CHANGE_NAME', value.lessonId)
+            value.lessonName = state.lessonName
+          })
+          commit('SET_GroupList', data)
+          resolve(data)
+        }
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  GetListbyLesson({ commit, state }, lessonid) {
+    // 通过LessonID获取作业列表
+    return new Promise((resolve, reject) => {
+      getbyLessonId({ lessonId: lessonid }
       ).then(response => {
         console.log(response)
         const { data } = response
@@ -26,8 +52,36 @@ const actions = {
           commit('CHANGE_NAME', value.lessonId)
           value.lessonName = state.lessonName
         })
-        // commit('SET_List', data)
+        commit('SET_LessonList', data)
         resolve(data)
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  PublishWork({ commit, state }, publishinfo) {
+    // 布置作业
+    return new Promise((resolve, reject) => {
+      PublishWork({ publishinfo }
+      ).then(response => {
+        console.log(response)
+        state.CurrentWork = publishinfo
+        resolve(response)
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  UpdateWork({ commit, state }, updateinfo) {
+    // 修改更新作业
+    return new Promise((resolve, reject) => {
+      UpdateWork({ updateinfo }
+      ).then(response => {
+        console.log(response)
+        state.CurrentWork = updateinfo
+        resolve(response)
       }).catch(error => {
         console.log(error)
         reject(error)

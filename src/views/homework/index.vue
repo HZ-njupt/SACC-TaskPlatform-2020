@@ -46,7 +46,7 @@ export default {
   methods: {
     getListbyGroupID(val) {
       if (val) {
-        this.$store.dispatch('homework/getlist').then((response) => {
+        this.$store.dispatch('homework/GetListbyGroup', val).then(response => {
           if (response) {
             console.log(response)
             this.HomeworkList = response

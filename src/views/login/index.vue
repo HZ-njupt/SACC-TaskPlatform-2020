@@ -74,8 +74,8 @@ export default {
     }
     return {
       loginForm: {
-        email: 'admin',
-        password: '111111'
+        email: 'test@qq.com',
+        password: '12345678'
       },
       loginRules: {
         email: [{ required: true, trigger: 'blur', validator: validateEmail }],
@@ -116,7 +116,7 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
+          alert('error submit!!')
           return false
         }
       })

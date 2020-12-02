@@ -1,10 +1,11 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getInfo } from '@/api/user'
+import { setSession, removeSession } from '@/utils/auth'
 import { resetRouter } from '@/router'
-
+import axios from 'axios'
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 const getDefaultState = () => {
   return {
-    token: getToken(),
+    // token: getToken(),
     name: '',
     nick: '',
     studentId: '',
@@ -18,7 +19,8 @@ const getDefaultState = () => {
     createdAt: '',
     updatedAt: '',
     username: '',
-    groupName: ''
+    groupName: '',
+    islogin: false
   }
 }
 
@@ -28,9 +30,9 @@ const mutations = {
   RESET_STATE: (state) => {
     Object.assign(state, getDefaultState())
   },
-  SET_TOKEN: (state, token) => {
-    state.token = token
-  },
+  // SET_TOKEN: (state, token) => {
+  //   state.token = token
+  // },
   // 设置用户信息
   SET_INFO: (state, data) => {
     state.name = data.name
@@ -51,27 +53,39 @@ const mutations = {
   CHANGE_NAME: (state) => {
     // 把ID号转为对应组名
     state.groupName = '组' + state.groupId
+  },
+  successLogin: (email) => {
+    setSession(email)
+  },
+  failLogin: (state) => {
+    removeSession()
   }
 }
 
 const actions = {
   // 用户登录
-  login({ commit }, userInfo) {
+  login({ state, commit }, userInfo) {
     const { email, password } = userInfo
+    var formData = new FormData()
+    formData.append('email', email)
+    formData.append('password', password)
     return new Promise((resolve, reject) => {
-      login({ email: email.trim(), password: password }
-      ).then(response => {
-        console.log(response)
-        const { data } = response
-        // commit('SET_TOKEN', data.token)
-        // console.log(data.token)
-        // setToken(data.token)
-        commit('SET_TOKEN', '1111111') // 等待后端添加token
-        setToken('1111111')
-        resolve()
-      }).catch(error => {
-        console.log(error)
-        reject(error)
+      axios({ // 因为登录的数据格式和其它接口不一样所以暂时先放在这里了
+        method: 'POST',
+        url: 'api/login',
+        withCredentials: true, // 允许携带cookie
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+          // 数据格式为FromData
+        },
+        data: formData
+      }).then((res) => {
+        if (res.data.code === 200) {
+          commit('successLogin')
+          resolve()
+        }
+      }).catch(err => {
+        reject(err)
       })
     })
   },
@@ -84,8 +98,9 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
+        console.log(response)
         // 权限默认editor普通用户，admin管理员
-        var role = ['admin']
+        var role = ['editor']
         if (data.role === 1) {
           role = ['admin']
         }
@@ -106,22 +121,15 @@ const actions = {
 
   // 退出登录
   logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+    removeSession() // 移除session
+    resetRouter()
+    commit('RESET_STATE') // 重置用户数据
   },
 
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      removeToken() // must remove  token  first
+      removeSession() // must remove  token  first
       commit('RESET_STATE')
       resolve()
     })
