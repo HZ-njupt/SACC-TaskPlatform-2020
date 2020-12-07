@@ -36,19 +36,18 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    before: require('./mock/mock-server.js'),
     proxy: {
       '/api': {
-        target: 'http://47.102.214.37',
-        changeOrigin: true,
-        ws: true,
-        secure: false,
+        target: 'http://47.102.214.37:9090', 	//API服务器的地址
+        ws: true, 				//代理websockets
+        changeOrigin: true, 	// cnpm 虚拟的站点需要更管origin
         pathRewrite: {
-          '^/api': '/'
+          //重写路径 比如'/api/aaa/ccc'重写为'/aaa/ccc'
+          '^/api': ''
         }
       }
     }
-
-    // before: require('./mock/mock-server.js')
   },
 
   configureWebpack: {

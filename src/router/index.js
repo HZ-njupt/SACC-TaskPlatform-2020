@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import { title } from '@/settings'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -64,7 +65,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'LessonList',
         component: () => import('@/views/lesson/index'),
-        meta: { title: 'Lesson List', icon: 'tree' }
+        meta: { title: 'Lesson List', icon: 'tree', role: 'admin' }
       },
       {
         path: 'issue',
