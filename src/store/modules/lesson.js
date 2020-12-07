@@ -11,7 +11,7 @@ const actions = {
   addLesson({ commit }, LessonInfo) {
     const { name, groupId, desc, time, location, type, liveUrl } = LessonInfo;
     return new Promise((resolve, reject) => {
-      addLesson({
+      addLesson(JSON.stringify({
         name: name.trim(),
         groupId: groupId,
         desc: desc.trim(),
@@ -19,7 +19,7 @@ const actions = {
         location: location.trim(),
         type: type,
         liveUrl: liveUrl.trim()
-      })
+      }))
         .then(response => {
           console.log(response.message);
           resolve();
@@ -45,7 +45,7 @@ const actions = {
         liveUrl: liveUrl.trim()
       })
         .then(response => {
-          console.log(response.data);
+          // console.log(response.data);
           resolve(response);
         })
         .catch(error => {
@@ -57,11 +57,9 @@ const actions = {
 
   //获取课程
   getLesson({ commit },Id) {
-    const id = Id;
+    const groupId = Id;
     return new Promise((resolve, reject) => {
-      getLesson({
-        id
-      })
+      getLesson(groupId)
         .then(response => {
           console.log(response.data);
           resolve(response);
@@ -77,9 +75,7 @@ const actions = {
   deleteLesson({commit},Id) {
     const id = Id;
     return new Promise((resolve, reject) => {
-      deleteLesson({
-        id
-      })
+      deleteLesson(id)
         .then(response => {
           console.log(response.message);
           resolve();
@@ -114,14 +110,13 @@ const actions = {
   isLiveUrl({commit}, isLiveUrlInfo) {
     const {id, type} = isLiveUrlInfo;
     isLiveUrl({
-      id,
-      type
+      id:+id,
+      type:+type
     }).then(response=> {
       console.log(response.message);
-      resolve();
+      resolve(response);
     }).catch(error=> {
       console.log(error);
-      reject(error);
     })
   }
 
