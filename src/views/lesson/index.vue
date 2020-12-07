@@ -73,14 +73,15 @@
       <el-form-item>
         <el-button type="primary" @click="onSubmit">添加课程</el-button>
         <el-button type="primary" @click="onUpdate">更新课程</el-button>
+        <!-- 修改课程信息 -->
         <el-button type="info" @click="resetForm">重置</el-button>
         <el-button type="danger" @click="ondelete">删除课程</el-button>
-        <el-button type="primary" @click="onUpdateURL">修改直播课地址</el-button>
+        <el-button type="primary" @click="onUpdateURL"
+          >修改直播课地址</el-button
+        >
+        <el-button type="primary" @click="getByGroupId">获取</el-button>
       </el-form-item>
     </el-form>
-
-  
-    
   </div>
 </template>
 
@@ -120,15 +121,24 @@ export default {
         //   status: "See the replay",
         // },
       ],
-      addLessonForm: {
-        name: "1",
-        groupId: 0,
-        desc: "1",
-        time: "1",
-        location: "1",
-        type: 0,
-        liveUrl: "1",
-      },
+      // addLessonForm: {
+      //   name: "1",
+      //   groupId: 0,
+      //   desc: "1",
+      //   time: "1",
+      //   location: "1",
+      //   type: 0,
+      //   liveUrl: "1",
+      // },
+      addLessonForm:{
+  name: "lalalla",
+  groupId: 1,
+  desc: "课程描述",
+  time: "2020-10-16 15:44:27",
+  location: "上课地址",
+  type: 1,
+  liveUrl: "https://www.bilibili.com"
+},
       rules: {
         name: [{ required: true, message: "请输入课程名称", trigger: "blur" }],
         groupId: [
@@ -158,7 +168,7 @@ export default {
   methods: {
     //添加课程
     onSubmit: function () {
-      console.log(this);
+      // console.log(this);
       this.loading = true;
       this.$store
         .dispatch("lesson/addLesson", this.addLessonForm)
@@ -192,6 +202,7 @@ export default {
     getByGroupId: function () {
       this.$store.dispatch("lesson/getLesson", 1).then((response) => {
         this.ClassList = response.data;
+        console.log(this.ClassList);
       });
     },
 
@@ -221,7 +232,7 @@ export default {
       this.$store.dispatch('lesson/isLiveUrl',{
         id: 1,
         type: 1
-      }).then(()=>{}).catch(()=>{})
+      }).then((response)=>{console.log(response);}).catch(()=>{})
     },
 
     //重置表单
