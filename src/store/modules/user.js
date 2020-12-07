@@ -2,7 +2,7 @@ import { getInfo } from '@/api/user'
 import { setSession, removeSession } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import axios from 'axios'
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+//axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 const getDefaultState = () => {
   return {
     // token: getToken(),
